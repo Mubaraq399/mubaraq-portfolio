@@ -1,11 +1,10 @@
 -- ============================================================
 -- Optional seed data. Run AFTER schema.sql, once, in the SQL Editor.
 -- Populates skills / experience / education exactly as originally
--- specified, and adds the six projects as DRAFTS (not visible on
--- the public site) with their known info filled in and narrative
--- fields (problem, objective, results, etc.) left as placeholders
--- for you to complete and images left empty — add those from
--- /admin/projects, then set each to "Published" when ready.
+-- specified, and adds the six projects as published starter records
+-- so they appear on the public site immediately. Narrative fields
+-- (problem, objective, results, etc.) remain placeholders until you
+-- complete them in /admin/projects, and images are left empty.
 -- ============================================================
 
 insert into projects (title, slug, short_description, description, category, status, technologies, hardware, software, problem, objective, role, how_it_works, workflow, testing, results, github_url)
@@ -13,7 +12,7 @@ values
 ('Smart Fish Pond Monitoring & Feeding System', 'smart-fish-pond-monitoring-feeding-system',
  'ESP32-based IoT system for monitoring fish pond conditions and automating feeding, water management, and aeration.',
  'ESP32-based IoT system for monitoring fish pond conditions and automating feeding, water management, and aeration.',
- 'IoT', 'draft',
+ 'IoT', 'published',
  array['ESP32','DS18B20','pH Sensor','Turbidity Sensor','Water-Level Sensors','Firebase','Servo','Pumps','Aerator'],
  'ESP32, DS18B20 temperature sensor, pH sensor, turbidity sensor, water-level sensors, servo motor, water pumps, aerator',
  'Arduino IDE, Firebase (cloud data & control)',
@@ -29,7 +28,7 @@ values
 ('Smart Tomato Storage System', 'smart-tomato-storage-system',
  'ESP32-based smart storage system designed to monitor temperature and humidity while controlling cooling conditions for improved tomato storage.',
  'ESP32-based smart storage system designed to monitor temperature and humidity while controlling cooling conditions for improved tomato storage.',
- 'Electronics', 'draft',
+ 'Electronics', 'published',
  array['ESP32','DHT22','Peltier Cooling','Relay','LCD','Firebase','PCB Design'],
  'ESP32, DHT22 temperature & humidity sensor, Peltier cooling module, relay module, LCD display, custom PCB',
  'Arduino IDE, Firebase (cloud data logging)',
@@ -45,7 +44,7 @@ values
 ('Smart Waste Management System', 'smart-waste-management-system',
  'Microcontroller-based smart waste system integrating RFID access, ultrasonic level monitoring, load-cell weighing, LCD display, and automated bin control.',
  'Microcontroller-based smart waste system integrating RFID access, ultrasonic level monitoring, load-cell weighing, LCD display, and automated bin control.',
- 'Automation', 'draft',
+ 'Automation', 'published',
  array['Arduino','RFID','Ultrasonic Sensor','Load Cell','LCD','Servo','PCB Design'],
  'Arduino, RFID reader/tags, ultrasonic sensor, load cell, LCD display, servo motor, custom PCB',
  'Arduino IDE',
@@ -61,7 +60,7 @@ values
 ('Smart Dustbin', 'smart-dustbin',
  'ESP32-based automatic dustbin with contactless lid control and IoT monitoring using ultrasonic and IR sensing.',
  'ESP32-based automatic dustbin with contactless lid control and IoT monitoring using ultrasonic and IR sensing.',
- 'IoT', 'draft',
+ 'IoT', 'published',
  array['ESP32','Ultrasonic Sensor','IR Sensor','Servo Motor','Blynk'],
  'ESP32, ultrasonic sensor, IR sensor, servo motor',
  'Arduino IDE, Blynk (IoT dashboard)',
@@ -77,7 +76,7 @@ values
 ('Intruder Alarm System', 'intruder-alarm-system',
  'Embedded security system combining motion detection, distance sensing, wireless communication, and alarm notification.',
  'Embedded security system combining motion detection, distance sensing, wireless communication, and alarm notification.',
- 'Embedded Systems', 'draft',
+ 'Embedded Systems', 'published',
  array['ATmega328P','PIR Sensor','Ultrasonic Sensor','433 MHz RF','GSM','Buzzer','Custom PCB'],
  'ATmega328P, PIR motion sensor, ultrasonic sensor, 433 MHz RF module, GSM module, buzzer, custom PCB',
  'Arduino IDE / AVR toolchain',
@@ -93,7 +92,7 @@ values
 ('Smart Irrigation System', 'smart-irrigation-system',
  'Automated irrigation system designed to monitor environmental conditions and control water delivery based on sensor readings.',
  'Automated irrigation system designed to monitor environmental conditions and control water delivery based on sensor readings.',
- 'Automation', 'draft',
+ 'Automation', 'published',
  array['Microcontroller','Sensors','Relay','Pump','Automation'],
  'Microcontroller, soil/environmental sensors, relay module, water pump',
  '[Add software/tools used]',
@@ -106,6 +105,17 @@ values
  '[Add measured result here]',
  '')
 on conflict (slug) do nothing;
+
+update projects
+set status = 'published'
+where slug in (
+  'smart-fish-pond-monitoring-feeding-system',
+  'smart-tomato-storage-system',
+  'smart-waste-management-system',
+  'smart-dustbin',
+  'intruder-alarm-system',
+  'smart-irrigation-system'
+);
 
 insert into skills (category, name, order_index) values
 ('Embedded Systems','ESP32',0),('Embedded Systems','Arduino',1),('Embedded Systems','ATmega328P',2),

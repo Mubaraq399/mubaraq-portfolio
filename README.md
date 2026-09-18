@@ -20,10 +20,10 @@ Admin Dashboard  →  Supabase Database  →  Public Website
    Security policies.
 3. (Optional but recommended) Run `supabase/seed.sql` next. It pre-fills the
    Skills, Experience, and Education sections exactly as originally written, and
-   adds the six projects as **drafts** with their known details filled in —
-   narrative fields you hadn't supplied (problem, objective, results, etc.) are
-   left as `[Add ...]` placeholders for you to complete in the dashboard, and no
-   project is visible on the public site until you publish it.
+   adds six **published starter projects** with their known details filled in.
+   Narrative fields you haven't supplied (problem, objective, results, etc.) are
+   left as `[Add ...]` placeholders for you to complete in the dashboard. You
+   can change any project back to a draft while editing it.
 4. **Storage bucket**: Storage → New bucket → name it exactly `project-media`,
    toggle **Public** on, then go back to SQL Editor and run the three storage
    policy statements at the bottom of `supabase/schema.sql` (they're commented
