@@ -17,6 +17,11 @@ export async function POST(request) {
     return NextResponse.json({ error: 'Name, email, and message are required.' }, { status: 400 });
   }
 
+  const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  if (!emailPattern.test(email)) {
+    return NextResponse.json({ error: 'Please enter a valid email address.' }, { status: 400 });
+  }
+
   const supabase = createClient();
   const { error } = await supabase.from('messages').insert({ name, email, message });
 
@@ -31,14 +36,16 @@ export async function POST(request) {
   // in your environment variables and this forwards the same fields
   // there. It's optional and never blocks the form if it fails or isn't set.
   if (process.env.FORMSPREE_ENDPOINT) {
-    fetch(process.env.FORMSPREE_ENDPOINT, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
-      body: JSON.stringify({ name, email, message })
-    }).catch(() => {
+    try {
+      await fetch(process.env.FORMSPREE_ENDPOINT, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
+        body: JSON.stringify({ name, email, message })
+      });
+    } catch {
       // Notification forwarding is best-effort only — the message is
       // already safely stored in Supabase regardless of this outcome.
-    });
+    }
   }
 
   return NextResponse.json({ ok: true });

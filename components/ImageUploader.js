@@ -17,8 +17,9 @@ export default function ImageUploader({ projectId, kind, label, images, onChange
     setError('');
     setUploading(true);
     const supabase = createClient();
+    const files = Array.from(fileList);
 
-    for (const file of Array.from(fileList)) {
+    for (const [index, file] of files.entries()) {
       const cleanName = file.name.replace(/[^a-zA-Z0-9.\-_]/g, '_');
       const path = `${projectId}/${kind}/${Date.now()}-${cleanName}`;
 
@@ -33,13 +34,13 @@ export default function ImageUploader({ projectId, kind, label, images, onChange
         project_id: projectId,
         url: publicUrlData.publicUrl,
         kind,
-        order_index: images.length
+        order_index: images.length + index
       });
       if (insertError) setError(insertError.message);
     }
 
     setUploading(false);
-    onChange();
+    if (onChange) onChange();
   }
 
   async function handleDelete(img) {

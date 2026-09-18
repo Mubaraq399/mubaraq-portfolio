@@ -4,22 +4,26 @@ import { useState } from 'react';
 
 export default function ContactForm() {
   const [status, setStatus] = useState('idle'); // idle | sending | sent | error
+  const [errorMessage, setErrorMessage] = useState('');
   const [form, setForm] = useState({ name: '', email: '', message: '' });
 
   async function handleSubmit(e) {
     e.preventDefault();
     setStatus('sending');
+    setErrorMessage('');
     try {
       const res = await fetch('/api/contact', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(form)
       });
-      if (!res.ok) throw new Error('Request failed');
+      const payload = await res.json().catch(() => ({}));
+      if (!res.ok) throw new Error(payload.error || 'Request failed');
       setStatus('sent');
       setForm({ name: '', email: '', message: '' });
-    } catch {
+    } catch (error) {
       setStatus('error');
+      setErrorMessage(error instanceof Error ? error.message : 'Something went wrong — please try again or email me directly.');
     }
   }
 
@@ -59,7 +63,7 @@ export default function ContactForm() {
         {status === 'sending' ? 'Sending…' : 'Send Message'}
       </button>
       {status === 'sent' && <p className="form-note" style={{ color: 'var(--ok)' }}>Message sent — thank you, I'll get back to you soon.</p>}
-      {status === 'error' && <p className="form-note" style={{ color: 'var(--danger)' }}>Something went wrong — please try again or email me directly.</p>}
+      {status === 'error' && <p className="form-note" style={{ color: 'var(--danger)' }}>{errorMessage}</p>}
     </form>
   );
 }
